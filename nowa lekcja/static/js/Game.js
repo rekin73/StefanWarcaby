@@ -37,6 +37,8 @@ function Game() {
         renderer.setClearColor(0xffffff);
         renderer.setSize(window.innerWidth, window.innerHeight);
         camera.position.set(-6*brickWidth, 4*brickHeight, 4*brickWidth )
+        console.log(scene.position);
+        
         renderer.shadowMap.enabled = true
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         var axes = new THREE.AxesHelper(1000)
@@ -49,6 +51,24 @@ function Game() {
             transparent: true,
             opacity: 0.5
         });
+        var tanFOV = Math.tan( ( ( Math.PI / 180 ) * camera.fov / 2 ) );
+        var windowHeight = window.innerHeight;
+        window.addEventListener( 'resize', onWindowResize, false );
+
+        function onWindowResize( event ) {
+        
+            camera.aspect = window.innerWidth / window.innerHeight;
+            
+            // adjust the FOV
+            camera.fov = ( 360 / Math.PI ) * Math.atan( tanFOV * ( window.innerHeight / windowHeight ) );
+            
+            camera.updateProjectionMatrix();
+            camera.lookAt( 4*brickWidth, 0, 4*brickWidth );
+        
+            renderer.setSize( window.innerWidth, window.innerHeight );
+            renderer.render( scene, camera );
+            
+        }
         var lightMesh = new THREE.MeshBasicMaterial({
             color: 0xffffff,
             specular: 0xffffff,
@@ -147,7 +167,7 @@ function Game() {
         function render() {
 
             requestAnimationFrame(render);
-
+            
             //ciągłe renderowanie / wyświetlanie widoku sceny nasza kamerą
 
             renderer.render(scene, camera);
