@@ -127,7 +127,6 @@ function Game() {
         box1.position.set(0, 10, 0)
         box2.position.set(-475, 25, 0)
 
-        //scene.add(box2)
         plane.rotateX(Math.PI / 2);
         var light = new THREE.SpotLight(0xffffff, 5, 1000, 3.14);
         light.position.set(100, 100, 100);
