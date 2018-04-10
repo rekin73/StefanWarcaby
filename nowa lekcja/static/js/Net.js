@@ -3,6 +3,7 @@
 */
 
 function Net() {
+    this.serverData;
     /*
         funkcja publiczna możliwa do uruchomienia 
         z innych klas
@@ -29,9 +30,9 @@ function Net() {
                     var obj = JSON.parse(data)
                     console.log(obj)
                     console.log(obj.akcja)
-                    ui.resLogin(obj.akcja)
+                    ui.resLogin(obj)
                     //var obj = JSON.parse(data)
-
+                    serverData = obj;
 
 
                     //tu wypisz sumę w div-ie na stronie

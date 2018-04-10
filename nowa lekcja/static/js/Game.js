@@ -9,11 +9,36 @@ function Game() {
     */
 
     var test = 10;
+    var playerColor;
 
+    //0-białe 1-czrne
+    var checkboard = [
+        [1, 0, 1, 0, 1, 0, 1, 0],
+        [0, 1, 0, 1, 0, 1, 0, 1],
+        [1, 0, 1, 0, 1, 0, 1, 0],
+        [0, 1, 0, 1, 0, 1, 0, 1],
+        [1, 0, 1, 0, 1, 0, 1, 0],
+        [0, 1, 0, 1, 0, 1, 0, 1],
+        [1, 0, 1, 0, 1, 0, 1, 0],
+        [0, 1, 0, 1, 0, 1, 0, 1]
+    ]
+    var checkers = [
+        [1, 0, 1, 0, 1, 0, 1, 0],
+        [0, 1, 0, 1, 0, 1, 0, 1],
+        [1, 0, 1, 0, 1, 0, 1, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 2, 0, 2, 0, 2, 0, 2],
+        [2, 0, 2, 0, 2, 0, 2, 0],
+        [0, 2, 0, 2, 0, 2, 0, 2],
+    ]
     /*
         zmienna publiczna, dostępna z innych klas, nie używać
     */
-
+    this.afterLogin = function (pColor) {
+        playerColor = pColor;
+        init();
+    }
     //this.test = 0; 
 
     /*
@@ -24,7 +49,13 @@ function Game() {
         $("h1").html("gra startuje, zmienna test = " + test)
         console.log("Game.init")
         var scene = new THREE.Scene();
+        console.log(scene.background)
+        scene.background = new THREE.Color(0xcccccc);
+        console.log(scene.background)
+
+
         var planeTab = [];
+        var checkerTab = [];
         var brickWidth = 100;
         var brickHeight = 50;
         var camera = new THREE.PerspectiveCamera(
@@ -36,9 +67,19 @@ function Game() {
         var renderer = new THREE.WebGLRenderer();
         renderer.setClearColor(0xffffff);
         renderer.setSize(window.innerWidth, window.innerHeight);
-        camera.position.set(-6*brickWidth, 4*brickHeight, 4*brickWidth )
-        console.log(scene.position);
+        switch (playerColor) {
+            case 'white':
+            camera.position.set(15 * brickWidth, 12 * brickHeight, 4 * brickWidth)
+                break;
+            case 'black':
+            camera.position.set(-6 * brickWidth, 12 * brickHeight, 4 * brickWidth)
+                break;
+            default:
+                break;
+        }
         
+        console.log(scene.position);
+
         renderer.shadowMap.enabled = true
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         var axes = new THREE.AxesHelper(1000)
@@ -51,23 +92,23 @@ function Game() {
             transparent: true,
             opacity: 0.5
         });
-        var tanFOV = Math.tan( ( ( Math.PI / 180 ) * camera.fov / 2 ) );
+        var tanFOV = Math.tan(((Math.PI / 180) * camera.fov / 2));
         var windowHeight = window.innerHeight;
-        window.addEventListener( 'resize', onWindowResize, false );
+        window.addEventListener('resize', onWindowResize, false);
 
-        function onWindowResize( event ) {
-        
+        function onWindowResize(event) {
+
             camera.aspect = window.innerWidth / window.innerHeight;
-            
+
             // adjust the FOV
-            camera.fov = ( 360 / Math.PI ) * Math.atan( tanFOV * ( window.innerHeight / windowHeight ) );
-            
+            camera.fov = (360 / Math.PI) * Math.atan(tanFOV * (window.innerHeight / windowHeight));
+
             camera.updateProjectionMatrix();
-            camera.lookAt( 4*brickWidth, 0, 4*brickWidth );
-        
-            renderer.setSize( window.innerWidth, window.innerHeight );
-            renderer.render( scene, camera );
-            
+            camera.lookAt(4 * brickWidth, 0, 4 * brickWidth);
+
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.render(scene, camera);
+
         }
         var lightMesh = new THREE.MeshBasicMaterial({
             color: 0xffffff,
@@ -81,51 +122,29 @@ function Game() {
             side: THREE.DoubleSide,
             map: new THREE.TextureLoader().load("mats/test.jpg"),
         })
-        var boxMaterial = [new THREE.MeshBasicMaterial({
-            color: 0x8888ff,
+        var checkerMeshW = new THREE.MeshBasicMaterial({
+            color: 0xffffff,
+            specular: 0xffffff,
             side: THREE.DoubleSide,
-            wireframe: false,
-            transparent: false,
-            opacity: 1
-        }), new THREE.MeshBasicMaterial({
-            color: 0x8888ff,
+
+        })
+        var checkerMeshB = new THREE.MeshBasicMaterial({
+            color: 0x0,
+            specular: 0xffffff,
             side: THREE.DoubleSide,
-            wireframe: false,
-            transparent: false,
-            opacity: 1
-        }), new THREE.MeshBasicMaterial({
-            color: 0x255077,
-            side: THREE.DoubleSide,
-            wireframe: false,
-            transparent: false,
-            opacity: 1
-        }), new THREE.MeshBasicMaterial({
-            color: 0x255077,
-            side: THREE.DoubleSide,
-            wireframe: false,
-            transparent: false,
-            opacity: 1
-        }), new THREE.MeshBasicMaterial({
-            color: 0x9944aa,
-            side: THREE.DoubleSide,
-            wireframe: false,
-            transparent: false,
-            opacity: 1
-        }), new THREE.MeshBasicMaterial({
-            color: 0x9944aa,
-            side: THREE.DoubleSide,
-            wireframe: false,
-            transparent: false,
-            opacity: 1
-        })];
+
+        })
+
+
         var boxGeo = new THREE.BoxGeometry(brickWidth, brickHeight, brickWidth);
-        var pieceGeo= new THREE.CylinderGeometry( brickWidth/2, brickWidth/2, brickHeight/2, 32 );
+        var pieceGeo = new THREE.CylinderGeometry(brickWidth / 2, brickWidth / 2, brickHeight / 2, 32);
         var plane = new THREE.Mesh(planeGeo, lightMesh);
         var box1 = new THREE.Mesh(boxGeo, lightMesh)
-        var box2 = new THREE.Mesh(boxGeo, boxMaterial)
-        var pieceWhite=new THREE.Mesh(pieceGeo,lightMesh);
+
+        var pieceWhite = new THREE.Mesh(pieceGeo, checkerMeshW);
         box1.position.set(0, 10, 0)
-        box2.position.set(-475, 25, 0)
+
+
 
         plane.rotateX(Math.PI / 2);
         var light = new THREE.SpotLight(0xffffff, 5, 1000, 3.14);
@@ -142,42 +161,58 @@ function Game() {
         scene.add(myLight);
         scene.add(axes);
         //scene.add(plane);
-        for (var i = 0; i < 8; i++) {
+        for (var i = 0; i < checkboard.length; i++) {
             planeTab.push([])
-            for (var j = 0; j < 8; j++) {
-                if(i%2==0&&j%2==0||i%2!=0&&j%2!=0){
-                planeTab[i].push(new THREE.Mesh(boxGeo, lightMesh));
-                }else{planeTab[i].push(new THREE.Mesh(boxGeo, darkMesh));}
-                planeTab[i][j].position.set(brickWidth*i+(0.5*brickWidth),0,brickWidth*j+(0.5*brickWidth));
+            for (var j = 0; j < checkboard[i].length; j++) {
+                if (checkboard[i][j] == 0) {
+                    planeTab[i][j] = new THREE.Mesh(boxGeo, lightMesh);
+                } else if (checkboard[i][j] == 1) { planeTab[i][j] = (new THREE.Mesh(boxGeo, darkMesh)); }
+                planeTab[i][j].position.set(brickWidth * i + (0.5 * brickWidth), 0, brickWidth * j + (0.5 * brickWidth));
                 scene.add(planeTab[i][j])
             }
         }
-        pieceWhite.position.set(0.5*brickWidth,0,0.5*brickWidth);
-        pieceWhite.position.y+=brickHeight/2;
-        scene.add(pieceWhite);
+        for (var i = 0; i < checkers.length; i++) {
+            checkerTab.push([])
+            for (var j = 0; j < checkers[i].length; j++) {
+                if (checkers[i][j] == 1) {
+                    checkerTab[i][j] = new THREE.Mesh(pieceGeo, checkerMeshB);
+                } else if (checkers[i][j] == 2) {
+                    checkerTab[i][j] = new THREE.Mesh(pieceGeo, checkerMeshW);
+                }
+                if (checkerTab[i][j] !== undefined) {
+                    checkerTab[i][j].position.set(brickWidth * i + (0.5 * brickWidth), 0, brickWidth * j + (0.5 * brickWidth));
+                    checkerTab[i][j].position.y += brickHeight;
+                    scene.add(checkerTab[i][j])
+                }
+            }
+        }
+        console.log(checkerTab)
+        /* pieceWhite.position.set(0.5 * brickWidth, 0, 0.5 * brickWidth);
+        pieceWhite.position.y += brickHeight;
+        scene.add(pieceWhite); */
         /* 
         planeTab.forEach(element => {
             scene.add(element)
         }); */
-        
+
         console.log(planeTab);
-        
+
 
         function render() {
 
             requestAnimationFrame(render);
-            
+
             //ciągłe renderowanie / wyświetlanie widoku sceny nasza kamerą
 
             renderer.render(scene, camera);
         }
         $("#root").append(renderer.domElement);
-        camera.lookAt(4*brickWidth, 0, 4*brickWidth)
+        camera.lookAt(4 * brickWidth, 0, 4 * brickWidth)
 
         render();
     }
 
-    init();
+    //init();
 
     /*
         funkcje publiczne możliwe do wywołania z innych klas

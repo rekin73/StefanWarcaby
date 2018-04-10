@@ -4,9 +4,10 @@
 
 function Ui() {
     this.resLogin = function (akcja) {
-        switch (akcja) {
+        switch (akcja.akcja) {
             case "LoginAccepted":
                 $("#login").remove();
+                game.afterLogin(akcja.UserColor)
                 break;
             case "UserNameIsTaken":
                 console.log("UIT")
@@ -35,4 +36,10 @@ function Ui() {
         $("h1").html(net.sendData());
     })
 
+
+
+
+
+
+    
 }

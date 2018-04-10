@@ -20,8 +20,12 @@ var servres = function (req, res) {
                         res.end(JSON.stringify({akcja: "UserNameIsTaken", UserName: finishObj.user }))
                     }
                     else {
+                        var pColor;
+                        if(users.length==0){
+                            pColor="white";
+                        }else{pColor="black"}
                         users.push(finishObj.user)
-                        res.end(JSON.stringify({akcja:"LoginAccepted",UserName:finishObj.user}))
+                        res.end(JSON.stringify({akcja:"LoginAccepted",UserName:finishObj.user,UserColor:pColor}))
                     }
                 }
                 else {
