@@ -44,4 +44,32 @@ function Net() {
             });
         }
     }
+    this.ask=function(){
+        
+        $.ajax({
+            url: "http://localhost:3000",
+            data: {
+                akcja: "ASK_FOR_PLAYER",
+                
+            },
+            type: "POST",
+            success: function (data) {
+                //czytamy odesłane z serwera dane
+                var obj = JSON.parse(data);
+                console.log(obj);
+                ui.setWaiting(obj.boool);
+                //ui.resLogin(obj)
+                //var obj = JSON.parse(data)
+                //serverData = obj;
+
+
+                //tu wypisz sumę w div-ie na stronie
+
+            },
+            error: function (xhr, status, error) {
+                console.log('Error: ' + error);
+            },
+        });
+        
+    }
 }

@@ -17,22 +17,31 @@ var servres = function (req, res) {
                 console.log("Dodawanie użytkownków")
                 if (users.length < 2) {
                     if (users.length == 1 && users[0] == finishObj.user) {
-                        res.end(JSON.stringify({akcja: "UserNameIsTaken", UserName: finishObj.user }))
+                        res.end(JSON.stringify({ akcja: "UserNameIsTaken", UserName: finishObj.user }))
                     }
                     else {
                         var pColor;
-                        if(users.length==0){
-                            pColor="white";
-                        }else{pColor="black"}
+                        if (users.length == 0) {
+                            pColor = "white";
+                        } else { pColor = "black" }
                         users.push(finishObj.user)
-                        res.end(JSON.stringify({akcja:"LoginAccepted",UserName:finishObj.user,UserColor:pColor}))
+                        res.end(JSON.stringify({ akcja: "LoginAccepted", UserName: finishObj.user, UserColor: pColor }))
                     }
                 }
                 else {
-                    res.end(JSON.stringify({akcja:"RoomIsFull",UserName:finishObj.user}))
+                    res.end(JSON.stringify({ akcja: "RoomIsFull", UserName: finishObj.user }))
                 }
                 break;
             //inna akcja
+            case "ASK_FOR_PLAYER":
+                console.log("asking for player")
+                if(users.length==2){
+                    res.end(JSON.stringify({boool:true}));
+                }
+                else{
+                    res.end(JSON.stringify({boool:false}));
+                }
+                break;
             case "INNA_AKCJA":
                 console.log("inna akcja")
                 break;
